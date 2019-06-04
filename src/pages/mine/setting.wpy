@@ -1,0 +1,41 @@
+<template>
+  <view class="container">
+    设置
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import { connect } from 'wepy-redux'
+
+  @connect({
+  
+  })
+
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '设置'
+    }
+    components = {
+  
+    }
+
+    data = {
+  
+    }
+
+    computed = {
+  
+    }
+
+    methods = {
+  
+    }
+    onLoad() {
+  
+    }
+  }
+</script>
+<style lang="less">
+  
+</style>

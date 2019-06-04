@@ -1,0 +1,107 @@
+<template>
+  <view>
+    <camera mode="scanCode" 
+    device-position="back" 
+    binderror="error" 
+    style="width: 100%; height:150rpx;" 
+    bindscancode="takeCode" 
+    scan-area="[0,0,200, 200]">
+    <view bindtap="clickasd">预览 + {{StaffRankList}}</view>
+    <view class='card b-shadow'>
+    <view>
+      <image mode="widthFix"  src='../assets/img/tab_my@2x.png'></image> 
+    </view>
+    <view>
+      <repeat for="{{arraylist}}" item="items" wx:if="{{arraylist}}">
+        <view class="borderline">
+          <view class="fontview">{{items}}</view>
+          <view class="funcview">删除</view>
+        </view>
+        
+      </repeat>
+    </view>
+  </view> 
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import { connect, getStore } from 'wepy-redux'
+  import { testdata } from '../store/actions/counter.js'
+
+  const store = getStore()
+  @connect({
+    StaffRankList: state => state.counter.stringNum
+  })
+
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: 'work'
+    }
+    data = {
+      arraylist: [1]
+    }
+    methods = {
+      onShareAppMessage: function (ops) {
+        console.log('eeeeeeeeeeeee', ops)
+        if (ops.from === 'button') {
+          // 来自页面内转发按钮
+          console.log(ops.target)
+        }
+        return {
+          title: 'xx小程序',
+          path: 'pages/index/index',
+          success: function (res) {
+            // 转发成功
+            console.log('转发成功:' + JSON.stringify(res))
+          },
+          fail: function (res) {
+            // 转发失败
+            console.log('转发失败:' + JSON.stringify(res))
+          }
+        }
+      },
+      clickasd() {
+        console.log('aaaaaaaa', this.StaffRankList)
+        store.dispatch(testdata({
+          q: {page: -1, limit: -1, where: {created: 'time'}, field: 'data', order: {}}
+        }))
+        wepy.scanCode({
+          success(res) {
+            console.log(res)
+          }
+        })
+      },
+      takeCode(e) {
+        wx.showLoading({
+          title: '加载中'
+        })
+        let fileCode = e.detail.result
+        let newNum = this.arraylist.indexOf(fileCode)
+
+        if (String(newNum) === '-1') {
+          this.arraylist.push(e.detail.result)
+        }
+        wx.hideLoading()
+      }
+    }
+    onLoad() {
+  
+    }
+  }
+</script>
+<style lang="less">
+ .borderline{
+   border: 1px solid red;
+   display: flex;
+    .fontview{
+      flex: 1;
+    }
+    .funcview{
+      width: 60px;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+    }
+ } 
+</style>
